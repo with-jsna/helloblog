@@ -1,0 +1,32 @@
+spring:
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  sql:
+    init:
+      mode: always
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:~/test
+    username: sa
+    password:
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        format_sql: true
+        show_sql: false
+    defer-datasource-initialization: true
+
+blog:
+  kakao:
+    url: https://dapi.kakao.com
+    blogPath: /v2/search/blog
+    authorization: KakaoAK 11ab87ca93bc2120ffa72a9611e75c94
+  naver:
+    url: https://openapi.naver.com
+    blogPath: /v1/search/blog.json
+    id: ssKXSy94tVZi2JB79M9y
+    secret: Sk6TiRMw1B
