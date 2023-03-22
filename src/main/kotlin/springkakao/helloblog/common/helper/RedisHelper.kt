@@ -13,12 +13,9 @@ class RedisHelper(
     private val redissonClient: RedissonClient
 ) {
     fun <T> lock(key: String, function: () -> T): T {
-        val worker = Thread.currentThread().name
-
         val lock = redissonClient.getLock("$key$LOCK_SUFFIX")
 
         runCatching {
-            println("${worker} worker")
             lock.tryLock(WAIT_TIME, LEASE_TIME, SECONDS)
 
         }.getOrElse { ex ->

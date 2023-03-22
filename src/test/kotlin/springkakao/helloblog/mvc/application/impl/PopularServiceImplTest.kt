@@ -2,15 +2,16 @@ package springkakao.helloblog.mvc.application.impl
 
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
-import io.mockk.*
+import io.mockk.every
+import io.mockk.invoke
+import io.mockk.mockk
+import io.mockk.verify
 import org.mockito.InjectMocks
-import org.mockito.invocation.Location
 import springkakao.helloblog.common.helper.RedisHelper
 import springkakao.helloblog.mvc.domain.entity.SearchWordCount
 import springkakao.helloblog.mvc.infrastructure.persistence.DslSearchWordCountRepository
 import springkakao.helloblog.mvc.infrastructure.persistence.SearchWordCountRepository
 import springkakao.helloblog.mvc.presentation.response.PopularSearchWordVo
-import java.util.*
 
 val searchWordCountRepository: SearchWordCountRepository = mockk()
 val dslSearchWordCountRepository: DslSearchWordCountRepository = mockk()
@@ -49,13 +50,10 @@ class PopularServiceImplTest : BehaviorSpec({
     }
 
     given("검색어 횟수 증가가 요청이된 상황에서") {
-
-        val id = slot<UUID>()
-
         val searchWordCount = SearchWordCount("카뱅", 1)
 
         every { searchWordCountRepository.findByWord(any()) } answers { searchWordCount }
-        every { redisHelper.lock(any()) { capture(id) } } answers { value }
+        every { redisHelper.lock(any(), captureLambda<() -> Unit>()) } answers { lambda<() -> Unit>().invoke() }
 
         `when`("처리를 하면") {
             popularServiceImpl.addSearchWord("카뱅")

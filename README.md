@@ -2,6 +2,10 @@
 
 > 과제: 블로그 검색 서비스
 
+## 다운로드 링크
+
+https://drive.google.com/drive/folders/1qkc-O2nQCCDcNdgPZYN6V9Mtn4DyohdP?usp=sharing
+
 ## Run Project
 
 ```bash
@@ -122,4 +126,4 @@ Host: localhost:8080
     }
   ]
 }
-``` 
+```
