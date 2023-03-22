@@ -53,7 +53,12 @@ class PopularServiceImplTest : BehaviorSpec({
         val searchWordCount = SearchWordCount("카뱅", 1)
 
         every { searchWordCountRepository.findByWord(any()) } answers { searchWordCount }
-        every { redisHelper.lock(any(), captureLambda<() -> Unit>()) } answers { lambda<() -> Unit>().invoke() }
+        every {
+            redisHelper.lock(
+                any(),
+                captureLambda<() -> Unit>()
+            )
+        } answers { lambda<() -> Unit>().invoke() }
 
         `when`("처리를 하면") {
             popularServiceImpl.addSearchWord("카뱅")

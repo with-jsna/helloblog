@@ -8,11 +8,13 @@ import springkakao.helloblog.mvc.domain.entity.SearchWordCount
 @Repository
 interface SearchWordCountRepository : JpaRepository<SearchWordCount, Long> {
 
-    @Query("""
+    @Query(
+        """
         from SearchWordCount 
         where word=:word
         order by word
         limit 1
-    """)
+    """
+    )
     fun findByWord(word: String): SearchWordCount?
 }
