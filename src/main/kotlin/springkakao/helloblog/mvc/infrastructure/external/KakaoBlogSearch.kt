@@ -3,6 +3,7 @@ package springkakao.helloblog.mvc.infrastructure.external
 import org.mapstruct.factory.Mappers
 import org.springframework.http.HttpHeaders
 import org.springframework.stereotype.Component
+import org.springframework.web.client.RestTemplate
 import springkakao.helloblog.common.constant.Codes.BlogType.KAKAO
 import springkakao.helloblog.common.exception.CommonExceptionType.UNEXPECTED_SEARCH_KAKAO_BLOG
 import springkakao.helloblog.common.properties.BlogProperties

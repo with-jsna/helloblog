@@ -8,14 +8,18 @@ import java.util.concurrent.TimeUnit.SECONDS
 
 @Component
 @DependsOn(value = ["embeddedRedis"])
-class RedisHelper(
-    private val redissonClient: RedissonClient
-) {
-    fun <T> lock(key: String, function: () -> T): T {
+class RedisHelper(private val redissonClient: RedissonClient) {
+    fun <T> lock(key: String, function: () -> T) {
         val lock = redissonClient.getLock("$key$LOCK_SUFFIX")
 
         runCatching {
-            lock.tryLock(WAIT_TIME, LEASE_TIME, SECONDS)
+            val result = lock.tryLock(WAIT_TIME, LEASE_TIME, SECONDS)
+
+            if (!result) {
+                throw RuntimeException()
+            }
+
+            function()
 
         }.getOrElse { ex ->
             throw ex
@@ -23,7 +27,6 @@ class RedisHelper(
             unlock(lock)
         }
 
-        return function()
     }
 
     private fun unlock(lock: RLock?) {
@@ -34,7 +37,7 @@ class RedisHelper(
 
     companion object {
         private const val LOCK_SUFFIX = ":LOCK"
-        private const val WAIT_TIME = 5L
-        private const val LEASE_TIME = 3L
+        private const val WAIT_TIME = 100L
+        private const val LEASE_TIME = 10L
     }
 }

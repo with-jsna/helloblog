@@ -1,6 +1,7 @@
 package springkakao.helloblog.mvc.application.impl
 
 import org.mapstruct.factory.Mappers
+import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import springkakao.helloblog.common.helper.RedisHelper
@@ -28,9 +29,10 @@ class PopularServiceImpl(
         }
     }
 
+    @Async
     override fun addSearchWord(word: String) {
+        println("addSearchWord = ${Thread.currentThread().id}")
         val lockKeyName = "${LOCK_PREFIX}:${word}"
-
 
         redisHelper.lock(lockKeyName) {
             searchWordCountRepository.findByWord(word)?.also {
@@ -38,6 +40,7 @@ class PopularServiceImpl(
             } ?: run {
                 searchWordCountRepository.save(SearchWordCount(word = word))
             }
+            searchWordCountRepository.flush()
         }
     }
 

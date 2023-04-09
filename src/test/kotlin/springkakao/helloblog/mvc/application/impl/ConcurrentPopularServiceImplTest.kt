@@ -11,15 +11,15 @@ import java.util.concurrent.Executors
 
 @SpringBootTest
 class ConcurrentPopularServiceImplTest(
-    val popularServiceImpl: PopularServiceImpl,
-    val searchWordCountRepository: SearchWordCountRepository
+    private val popularServiceImpl: PopularServiceImpl,
+    private val searchWordCountRepository: SearchWordCountRepository
 ) : BehaviorSpec({
 
     given("100명이 동시에 요청한 상황에서") {
         val searchWord = "이뱅"
         val numberOfThreads = 100
         val latch = CountDownLatch(numberOfThreads)
-        val executor = Executors.newFixedThreadPool(1)
+        val executor = Executors.newFixedThreadPool(100)
 
         `when`("횟수 저장 요청하면") {
             for (i in 0 until numberOfThreads) {
@@ -30,9 +30,7 @@ class ConcurrentPopularServiceImplTest(
             }
             latch.await()
 
-            val result = withContext(Dispatchers.IO) {
-                searchWordCountRepository.findByWord(searchWord)
-            }
+            val result = searchWordCountRepository.findByWord(searchWord)
 
             then("100 횟수 저장된다.") {
                 result?.count shouldBe 100

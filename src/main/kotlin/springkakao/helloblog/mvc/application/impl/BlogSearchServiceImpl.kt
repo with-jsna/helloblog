@@ -16,6 +16,7 @@ class BlogSearchServiceImpl(
 ) : BlogSearchService {
 
     override fun search(blogSearchGetVo: BlogSearchGetVo): BlogSearchVo {
+        println("search = ${Thread.currentThread().id}")
         addSearchWord(blogSearchGetVo.keyword)
 
         return runCatching {
